@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sports-digest"
+version = "0.1.0"
+description = "Agenda esportiva para o Telegram, com transmissões no Brasil"
+requires-python = ">=3.11"
+dependencies = ["tzdata>=2024.1; sys_platform == 'win32'"]
+
+[project.scripts]
+sports-digest = "sports_digest.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

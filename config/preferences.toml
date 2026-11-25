@@ -1,0 +1,85 @@
+# Escopo inicial. IDs das fontes serão definidos após validar a cobertura.
+timezone = "America/Sao_Paulo"
+destination = "telegram"
+language = "pt-BR"
+
+[delivery]
+enabled = false
+hour = 9
+window_hours = 24
+
+[broadcasts]
+country = "BR"
+state = "SP"
+city = "São Paulo"
+include_sources = true
+unknown_label = "Transmissão a confirmar"
+
+[[competitions]]
+key = "nba"
+name = "NBA"
+sport = "basketball"
+selection = "all"
+allowed_seasons = ["regular-season", "post-season", "postseason", "playoffs"]
+
+[[competitions]]
+key = "nfl"
+name = "NFL"
+sport = "american_football"
+selection = "all"
+allowed_seasons = ["regular-season", "post-season", "postseason", "playoffs"]
+
+# Recorte inicial do futebol: masculino principal.
+# Campeonato Brasileiro interpretado como Série A; Paulista como Série A1.
+[[competitions]]
+key = "brasileirao_serie_a"
+name = "Campeonato Brasileiro — Série A"
+sport = "football"
+selection = "all"
+
+[[competitions]]
+key = "copa_do_brasil"
+name = "Copa do Brasil"
+sport = "football"
+selection = "all"
+minimum_round = 5
+
+[[competitions]]
+key = "libertadores"
+name = "CONMEBOL Libertadores"
+sport = "football"
+selection = "all"
+
+[[competitions]]
+key = "sulamericana"
+name = "CONMEBOL Sul-Americana"
+sport = "football"
+selection = "all"
+
+[[competitions]]
+key = "paulista_a1"
+name = "Campeonato Paulista — Série A1"
+sport = "football"
+selection = "at_least_one_team_in_list"
+teams = ["Corinthians", "Palmeiras", "Santos", "São Paulo"]
+
+[[competitions]]
+key = "champions_league"
+name = "UEFA Champions League"
+sport = "football"
+selection = "all"
+exclude_qualifying = true
+
+[[competitions]]
+key = "la_liga"
+name = "La Liga"
+sport = "football"
+selection = "at_least_one_team_in_list"
+teams = ["Real Madrid", "Barcelona"]
+
+[[competitions]]
+key = "premier_league"
+name = "Premier League"
+sport = "football"
+selection = "both_teams_in_list"
+teams = ["Arsenal", "Chelsea", "Liverpool", "Manchester City", "Manchester United", "Tottenham Hotspur"]

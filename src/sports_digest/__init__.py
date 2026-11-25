@@ -1,0 +1,1 @@
+"""Agenda esportiva diária."""
