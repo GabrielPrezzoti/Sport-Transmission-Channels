@@ -6,7 +6,7 @@ def render(digest, config):
     lines = [f"🏟️ Agenda esportiva — {digest.start:%d/%m/%Y}", "Horários de Brasília • Transmissões no Brasil / São Paulo", f"Jogos de {digest.start:%d/%m %H:%M} até {digest.end:%d/%m} às 8h59"]
     sports = [("football", "⚽ Futebol"), ("basketball", "🏀 Basquete"), ("american_football", "🏈 Futebol americano")]
     if not digest.events:
-        lines += ["", "Não haverá jogos na sua seleção nesta janela." if not digest.warnings else "Nenhum jogo confirmado na seleção. A consulta ficou incompleta; confira os avisos abaixo."]
+        lines += ["", "Não haverá jogos na sua seleção nesta janela." if not digest.warnings else "Nenhum jogo confirmado na seleção para esta janela."]
     for sport, title in sports:
         competitions = [c for c in config["competitions"] if c["sport"] == sport and any(e.competition == c["key"] for e in digest.events)]
         if not competitions:
@@ -20,8 +20,6 @@ def render(digest, config):
                 if local.date() != digest.start.date():
                     when += local.strftime(" — %d/%m/%Y")
                 lines += [f"{when} • {event.home} × {event.away}", "📺 " + (", ".join(event.channels) or config["broadcasts"]["unknown_label"])]
-    if digest.warnings:
-        lines += ["", "⚠️ Consultas e dados incompletos:"] + ["• " + w for w in digest.warnings]
     lines += ["", "Fontes consultadas: ESPN, ge, Overdrive, Hoops Brasil, TV Inside, FA.wiki, Guia de TV e Globo SP. Grades sujeitas a alteração; ausência de canal não significa ausência de transmissão."]
     return "\n".join(lines)
 

@@ -160,10 +160,6 @@ com horário a até 15 minutos da referência. Não são criados jogos a partir 
 grades, nem importados direitos americanos como se fossem brasileiros.
 Ausência de um canal em uma fonte não é prova de exclusividade de outro serviço.
 
-ESPN, ESPN 2, ESPN 3 etc. permanecem distintos. Disney+ e Prime Video são serviços
-separados; não inferimos ESPN a partir de Disney+ nem Prime Video a partir do
-Thursday Night Football americano. League Pass e Game Pass aparecem como
-assinaturas adicionais quando explicitamente listados por partida na fonte.
 
 Cada novo canal recebe URL, fonte, país e horário de consulta em
 `broadcast_evidence`, no JSON da agenda. Os links ficam no arquivo de evidências;
@@ -196,10 +192,6 @@ python scripts/audit_sources.py
 python scripts/verify_digest.py 2026-11-22 2026-11-25 2026-11-27 2026-11-28 2026-11-29
 ```
 
-A grade oficial da Globo SP pode começar antes do jogo: quando o confronto e a
-competição são explícitos, a partida deve estar dentro do intervalo publicado.
-Esse tratamento não é aplicado a grades genéricas ou de outras praças. SBT,
-Record e outras emissoras continuam sem confirmação regional automática.
 
 - [Agenda do ge](https://ge.globo.com/agenda/)
 - [Exemplo de consulta pública da ESPN](https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard)

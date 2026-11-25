@@ -64,7 +64,13 @@ class ScopeTests(unittest.TestCase):
         start, end = window(date(2026, 11, 25), CONFIG)
         text = render(Digest([], ["NFL: fonte indisponível"], start, end), CONFIG)
         self.assertNotIn("Não haverá jogos", text)
-        self.assertIn("NFL", text)
+        self.assertIn("Nenhum jogo confirmado", text)
+        self.assertNotIn("confira os avisos abaixo", text)
+        self.assertNotIn("NFL: fonte indisponível", text)
+        text_with_games = render(Digest([event()], ["Globo SP oficial: fonte indisponível"], start, end), CONFIG)
+        self.assertIn("Time A × Time B", text_with_games)
+        self.assertNotIn("Consultas e dados incompletos", text_with_games)
+        self.assertNotIn("Globo SP oficial: fonte indisponível", text_with_games)
 
     def test_long_messages_preserve_text_with_emojis(self):
         text = ("🏀 Time A × Time B\n" * 1000).strip()
