@@ -4,7 +4,7 @@ destination = "telegram"
 language = "pt-BR"
 
 [delivery]
-enabled = false
+enabled = true
 hour = 9
 window_hours = 24
 
