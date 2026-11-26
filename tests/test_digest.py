@@ -77,7 +77,7 @@ class ScopeTests(unittest.TestCase):
         parts = split_messages(text)
         self.assertGreater(len(parts), 1)
         self.assertTrue(all(len(p.encode("utf-16-le")) // 2 <= 3900 for p in parts))
-        self.assertEqual("\n".join(parts), text)
+        self.assertEqual("".join(parts), text)
 
 
 class SourcesTests(unittest.TestCase):

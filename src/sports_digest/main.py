@@ -35,6 +35,8 @@ def main():
         except DeliveryError as exc:
             parser.exit(1, f"Falha no envio: {exc}\n")
         print(f"Partes enviadas nesta execução: {sent}")
+        if sent == 0:
+            print("Envio ignorado: o registro desta data e destinatário já está concluído.")
 
 
 if __name__ == "__main__":

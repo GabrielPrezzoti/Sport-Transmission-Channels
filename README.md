@@ -8,9 +8,10 @@ transmissões no Brasil. Usa fontes públicas sem assinatura de dados, sem IA pa
 - Coleta de jogos da ESPN e complemento da agenda do ge implementados.
 - Filtros, normalização de nomes e resumo por esporte/competição implementados.
 - Prévia real de 25/11/2026 validada localmente, com 20 jogos e sem duplicatas.
-- Envio ao Telegram e workflows preparados, ainda sem teste de entrega real.
-- Envio desativado até configurar o bot e validar a prévia.
-- Nenhum repositório remoto está configurado nesta pasta; nada foi publicado.
+- Envio real ao Telegram confirmado pelo usuário e pelos logs de 26/11/2026.
+- Remoto GitHub configurado; ativação controlada por `delivery.enabled`.
+- Mensagens com confrontos em negrito e espaço entre jogos. O envio usa HTML
+  escapado, preservando blocos de jogo e tags válidas na divisão em mensagens.
 
 ## Escopo
 
@@ -86,6 +87,9 @@ das variáveis, mas arquivos `.env` não são carregados automaticamente.
    será reenviado automaticamente se já houver registro de envio concluído.
 
 O workflow agenda a execução às 12h UTC, equivalentes a 9h em Brasília atualmente.
+Há disparos de recuperação às 12h17 e 12h37 UTC (9h17/9h37 de Brasília).
+Eles usam o mesmo registro diário e não repetem partes confirmadas como enviadas.
+Isso reduz o risco de perder o resumo, mas não garante disparo pontual pelo GitHub.
 Ele precisa estar na branch padrão e o GitHub Actions deve estar habilitado.
 O GitHub pode atrasar ou deixar de executar um agendamento sob carga; não há garantia
 de pontualidade. Repositórios públicos podem ter agendamentos desativados após
@@ -171,6 +175,21 @@ Para datas futuras, a agenda diária do Overdrive e as grades do ge/TV Inside po
 ainda não estar completas. “Transmissão a confirmar” continua sendo necessário.
 
 ## Referências das integrações
+
+### Diagnóstico do agendamento em 26/11/2026
+
+O cron `0 12 * * *` está correto para 9h de Brasília. O job manual
+`140112367726` iniciou às 18h47 UTC (15h47 de Brasília) e confirmou uma parte
+enviada. O job automático `140173344549` iniciou às 21h16 UTC (18h16 de Brasília),
+restaurou o cache da execução manual e informou zero partes enviadas.
+Portanto, houve atraso na execução automática e o controle de duplicatas
+impediu uma segunda entrega. Os logs não identificam a causa interna do atraso.
+O aviso de Node 20 não impediu o envio: ambos os jobs concluíram com sucesso.
+
+As actions foram atualizadas para runtimes Node 24. O workflow agora escreve
+um resumo com tipo de evento, cron, data da agenda e contagem do registro de
+entrega. A contagem restaurada não é a quantidade enviada naquela execução;
+para isso, veja `Partes enviadas nesta execução` na etapa de coleta/envio.
 
 ### Auditoria de qualidade
 

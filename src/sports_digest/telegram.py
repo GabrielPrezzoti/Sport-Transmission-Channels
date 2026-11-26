@@ -19,10 +19,13 @@ def save(path, data):
     temp.replace(path)
 
 
-def send_one(token, chat_id, text):
+def send_one(token, chat_id, text, parse_mode="HTML"):
     # Nunca incluir token, URL, chat_id ou resposta bruta em exceções/logs.
     url = f"https://api.telegram.org/bot{token}/sendMessage"
-    data = json.dumps({"chat_id": chat_id, "text": text, "link_preview_options": {"is_disabled": True}}).encode()
+    payload = {"chat_id": chat_id, "text": text, "link_preview_options": {"is_disabled": True}}
+    if parse_mode:
+        payload["parse_mode"] = parse_mode
+    data = json.dumps(payload).encode()
     request = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -45,7 +48,7 @@ def deliver(messages, day, state_dir=Path(".state")):
     if path.exists():
         ledger = json.loads(path.read_text(encoding="utf-8"))
     else:
-        ledger = {"date": day.isoformat(), "parts": [{"text": text, "status": "new"} for text in messages]}
+        ledger = {"date": day.isoformat(), "parse_mode": "HTML", "parts": [{"text": text, "status": "new"} for text in messages]}
         save(path, ledger)
     sent = 0
     # Reutilizar o resumo original em retomadas; a coleta pode ter mudado.
@@ -56,7 +59,7 @@ def deliver(messages, day, state_dir=Path(".state")):
             raise DeliveryError("Existe um envio de resultado incerto no registro. Confira o Telegram e reconcilie o estado antes de reenviar")
         part["status"] = "pending"
         save(path, ledger)
-        message_id = send_one(token, chat_id, part["text"])
+        message_id = send_one(token, chat_id, part["text"], parse_mode=ledger.get("parse_mode"))
         part.update(status="sent", message_id=message_id)
         save(path, ledger)
         sent += 1
