@@ -6,6 +6,7 @@ from pathlib import Path
 import urllib.error
 import urllib.request
 import time
+from uuid import uuid4
 
 
 class DeliveryError(RuntimeError):
@@ -39,13 +40,16 @@ def send_one(token, chat_id, text, parse_mode="HTML"):
         raise DeliveryError("Resposta de envio incerta. Confira a conversa antes de tentar novamente") from None
 
 
-def deliver(messages, day, state_dir=Path(".state")):
+def deliver(messages, day, state_dir=Path(".state"), *, force_resend=False):
     token, chat_id = os.getenv("TELEGRAM_BOT_TOKEN", ""), os.getenv("TELEGRAM_CHAT_ID", "")
     if not token or not chat_id:
         raise DeliveryError("Defina TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID nos segredos do ambiente")
     recipient = hashlib.sha256(chat_id.encode()).hexdigest()[:16]
     path = state_dir / f"{day.isoformat()}-{recipient}.json"
-    if path.exists():
+    if path.exists() and force_resend:
+        previous = json.loads(path.read_text(encoding="utf-8"))
+        save(state_dir / "history" / f"{path.stem}-{uuid4().hex}.json", previous)
+    if path.exists() and not force_resend:
         ledger = json.loads(path.read_text(encoding="utf-8"))
     else:
         ledger = {"date": day.isoformat(), "parse_mode": "HTML", "parts": [{"text": text, "status": "new"} for text in messages]}

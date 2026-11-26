@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       send:
-        description: Enviar ao Telegram (exige delivery.enabled = true)
+        description: Enviar ao Telegram, mesmo se já enviado hoje (exige delivery.enabled = true)
         type: boolean
         default: false
 
@@ -45,10 +45,13 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           SHOULD_SEND: ${{ github.event_name == 'schedule' || inputs.send }}
+          FORCE_RESEND: ${{ github.event_name == 'workflow_dispatch' && inputs.send }}
           DIGEST_DATE: ${{ steps.day.outputs.date }}
         shell: bash
         run: |
-          if [ "$SHOULD_SEND" = "true" ]; then
+          if [ "$FORCE_RESEND" = "true" ]; then
+            sports-digest --date "$DIGEST_DATE" --send --force-resend
+          elif [ "$SHOULD_SEND" = "true" ]; then
             sports-digest --date "$DIGEST_DATE" --send
           else
             sports-digest --date "$DIGEST_DATE"

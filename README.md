@@ -83,8 +83,9 @@ das variáveis, mas arquivos `.env` não são carregados automaticamente.
 3. Em **Actions → Agenda esportiva diária → Run workflow**, execute primeiro com
    `send` desmarcado e confira o artefato da agenda.
 4. Altere `delivery.enabled` para `true` em `config/preferences.toml` e publique.
-5. Execute manualmente com `send` marcado para testar a entrega. O mesmo dia não
-   será reenviado automaticamente se já houver registro de envio concluído.
+5. Execute manualmente com `send` marcado para testar a entrega. Cada execução
+   manual envia novamente o resumo recém-gerado, mesmo que já tenha sido enviado
+   naquele dia. Com `send` desmarcado, continua sendo apenas uma prévia.
 
 O workflow agenda a execução às 12h UTC, equivalentes a 9h em Brasília atualmente.
 Há disparos de recuperação às 12h17 e 12h37 UTC (9h17/9h37 de Brasília).
@@ -142,6 +143,14 @@ Para reconciliar: confira a conversa, restaure o JSON do artefato se necessário
 marque a parte como `sent` caso tenha chegado, ou `new` somente se não tiver chegado.
 Execute localmente com as variáveis de ambiente configuradas e o estado recuperado.
 Não apague o registro do dia para simplesmente repetir um envio.
+
+Para um teste manual local, use `sports-digest --send --force-resend`. Essa opção
+requer `--send` e `delivery.enabled = true`. O workflow usa a opção somente nos
+disparos manuais com `send` marcado; os disparos agendados mantêm a proteção.
+O registro anterior é arquivado em `.state/history/` e o resumo atual recebe um
+novo registro diário. Assim, o próximo disparo agendado também reconhece o teste
+como entrega concluída. Um reenvio forçado é intencional e pode repetir mensagens
+de um envio anterior cujo resultado ficou incerto.
 
 ## Complemento de transmissões brasileiras de NBA e NFL
 

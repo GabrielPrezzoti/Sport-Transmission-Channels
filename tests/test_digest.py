@@ -125,6 +125,21 @@ class DeliveryTests(unittest.TestCase):
     @patch.dict("os.environ", {"TELEGRAM_BOT_TOKEN": "test-token", "TELEGRAM_CHAT_ID": "123"})
     @patch("sports_digest.telegram.time.sleep")
     @patch("sports_digest.telegram.send_one", return_value=101)
+    def test_manual_resends_current_summary_but_schedule_still_skips(self, send_one, sleep):
+        with tempfile.TemporaryDirectory() as folder:
+            day, state = date(2026, 11, 26), Path(folder)
+            self.assertEqual(deliver(["versão inicial"], day, state), 1)
+            self.assertEqual(deliver(["novo visual"], day, state, force_resend=True), 1)
+            self.assertEqual(send_one.call_args.args[2], "novo visual")
+            self.assertEqual(deliver(["outro teste"], day, state, force_resend=True), 1)
+            self.assertEqual(send_one.call_args.args[2], "outro teste")
+            self.assertEqual(deliver(["disparo agendado"], day, state), 0)
+            self.assertEqual(send_one.call_count, 3)
+            self.assertEqual(len(list((state / "history").glob("*.json"))), 2)
+
+    @patch.dict("os.environ", {"TELEGRAM_BOT_TOKEN": "test-token", "TELEGRAM_CHAT_ID": "123"})
+    @patch("sports_digest.telegram.time.sleep")
+    @patch("sports_digest.telegram.send_one", return_value=101)
     def test_repeat_run_does_not_resend(self, send_one, sleep):
         with tempfile.TemporaryDirectory() as folder:
             day, state = date(2026, 11, 25), Path(folder)
