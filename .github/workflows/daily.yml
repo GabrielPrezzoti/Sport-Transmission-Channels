@@ -2,8 +2,8 @@ name: Agenda esportiva diária
 
 on:
   schedule:
-    - cron: '0 12 * * *' # 09h de Brasília (UTC-3); pode haver atraso do GitHub.
-    - cron: '17,37 12 * * *' # Recuperação às 09h17/09h37; registro impede reenvio confirmado.
+    - cron: '0 3 * * *' # 00h de Brasília (UTC-3); antecedência para atrasos do GitHub.
+    - cron: '17,37 3 * * *' # Recuperação às 00h17/00h37; registro impede reenvio confirmado.
   workflow_dispatch:
     inputs:
       send:

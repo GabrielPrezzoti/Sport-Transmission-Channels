@@ -87,8 +87,12 @@ das variáveis, mas arquivos `.env` não são carregados automaticamente.
    manual envia novamente o resumo recém-gerado, mesmo que já tenha sido enviado
    naquele dia. Com `send` desmarcado, continua sendo apenas uma prévia.
 
-O workflow agenda a execução às 12h UTC, equivalentes a 9h em Brasília atualmente.
-Há disparos de recuperação às 12h17 e 12h37 UTC (9h17/9h37 de Brasília).
+O workflow agenda a execução às 03h UTC, equivalentes a meia-noite em Brasília.
+Há disparos de recuperação às 03h17 e 03h37 UTC (00h17/00h37 de Brasília).
+O disparo foi antecipado para dar margem aos atrasos do GitHub antes das 9h;
+isso não garante entrega até esse horário. A coleta e o envio acontecem assim
+que o workflow executa, mantendo a janela de jogos das 9h do dia às 9h do seguinte.
+Fontes ainda incompletas na madrugada podem resultar em transmissões a confirmar.
 Eles usam o mesmo registro diário e não repetem partes confirmadas como enviadas.
 Isso reduz o risco de perder o resumo, mas não garante disparo pontual pelo GitHub.
 Ele precisa estar na branch padrão e o GitHub Actions deve estar habilitado.
